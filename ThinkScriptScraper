@@ -1,0 +1,28 @@
+#declare once_per_bar;
+def Vol = Volume; 
+def VWAP = vwap(); 
+def UO = UltimateOscillator(5, 10, 20);
+def CHMF = ChaikinMoneyFlow(15).CMF;
+def CV = ChaikinVolatility(15, 15);
+def CMO = ChandeMomentumOscillator(15);
+def HMA = HullMovingAvg(close, 15, 0);
+def RVI = RelativeVolatilityIndex(15, 10, AverageType.SIMPLE).RVI;
+def AO = AroonOscillator(25).UpDownDiff;
+def TSI = TrueStrengthIndex(25, 15, 10, AverageType.EXPONENTIAL).TSI;
+def WTMA = MovingAverage(AverageType.WEIGHTED, close, 15);
+def NVI = NegativeVolumeIndex().NVI;
+def MAE_U = MovAvgEnvelope(0, 15, 5, 5, close, close, AverageType.SIMPLE).UpperBand;
+def MAE_L = MovAvgEnvelope(0, 15, 5, 5, close, close, AverageType.SIMPLE).LowerBand;
+def DPO = DetrendedPriceOsc(5, 15, close).DPO;
+def KO_OSC = KlingerOscillator(15).KVOsc;
+def KO_SIG = KlingerOscillator(15).TriggerLine;
+def ROC = RateOfChange(15, 15, close).ROC;
+def KB_U = KeltnerChannels(0, 2, 20, close, AverageType.SIMPLE, AverageType.SIMPLE).Upper_Band;
+def KB_L = KeltnerChannels(0, 2, 20, close, AverageType.SIMPLE, AverageType.SIMPLE).Lower_Band;
+def APO = PriceOsc(14, 9, close, 18, AverageType.SIMPLE).PriceOsc;
+def SRSI = StochRSI(15, 80, 20, AverageType.SIMPLE, close, 14, 3, 1, AverageType.SIMPLE ).FullK;
+
+
+AddOrder(OrderType.BUY_AUTO, close >= close[1] or close <= close[1], open[-1], 1, Color.ORANGE, Color.ORANGE, open + ", " + high + ", " + low + ", " + close + ", " + Vol[-1] + ", " + VWAP[-1] + ", " + UO[-1] + "," + CHMF[-1] + ", " + CV[-1] + ", " + CMO[-1] + ", " + HMA[-1] + ", " + RVI[-1] + ", " + AO[-1] + ", " + TSI[-1] + ", " + WTMA[-1] + "," + NVI[-1] + ", " + MAE_U[-1] + ", " + MAE_L[-1] + ", " + DPO[-1]+ ", " + KO_OSC[-1] +  ", " + KO_SIG[-1] + ", " + ROC[-1] + ", " + KB_U[-1] + ", " + KB_L[-1] + ", " + APO[-1] + ", " + SRSI[-1]);
+
+AddOrder(OrderType.SELL_TO_CLOSE, close >= close[1] or close <= close[1], open[-1], 1, Color.ORANGE, Color.ORANGE, " ");
