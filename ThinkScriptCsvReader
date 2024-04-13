@@ -1,0 +1,34 @@
+def ThinkScriptCsvReader(filename):
+  """
+  The function ThinkScriptCsvReader takes as parameters the file name of a csv containing 
+  the backtest report of the ThinkScript strategy in the file ThinkScriptScraper. The first and 
+  last couple of lines of the saved report have to be deleted before being read by the function
+  because the part of the report we are interested in is the table of orders. The function 
+  returns a list of dicts containing key value pairs with keys 'Date' and the indicator names.
+  """
+  file = open(filename)
+  ind_list = []
+  ind_reader = csv.reader(file, delimiter = ':')
+  
+  key_list = ['Open', 'High', 'Low', 'Close', 'Volume', 'VWAP', 'UO', 'CMF', 'CV', 'CMO',
+              'HMA', 'RVTI', 'AO', 'TSI', 'WTMA', 'NVI', 'MAE_U', 'MAE_L', 'DPO', 'KO_OSC',
+              'KO_SIG', 'ROC', 'KB_U', 'KB_L', 'APO', 'SRSI'] 
+  
+  i = 0
+  for row in ind_reader:
+    candle = {}
+    if i != 0:
+      if i % 2 == 0: ##If we are at a row with a buy to open order: that is one that returned indicator values in the name of the order
+        ##not sure why but the rows come in two strings
+        row_p1 = row[0].split(";")
+        date_p2 = row[1].split(";")[0] ##Only part needed from second string is the minute an AM/PM part of the date
+        values_str = row_p1[1]
+        date = datetime.strptime(row_p1[6] + ":" + date_p2, '%m/%d/%y, %I:%M %p') ## piece together date string then convert to datetime object
+        candle['Date'] = date ##create 'Date' key and assign it the value of date
+        values_str = (row_p1[1].removeprefix("Scraper(")).removesuffix(")") ##This assumes that you name the ThinkScriptScraper Scraper in ThinkOrSwim
+        values = values_str.split(',') ##Split into a list of strings
+        for j in range(len(key_list)):
+          candle[key_list[j]] = float(values[j]) ## Convert string to float
+        ind_list.append(candle) ##Append the dict
+    i += 1
+  return ind_list
